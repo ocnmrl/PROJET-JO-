@@ -5,10 +5,10 @@
 
 // Structure pour stocker une performance d'un athlète
 typedef struct {
-    char date[11];  // Format YYYY-MM-DD
+    char date[11];  // Format DD/MM/YYYY
     char epreuve[20];
     double temps;   // Temps réalisé en secondes
-    int positionRelais; // Position dans le relais, 0 pour les épreuves individuelles
+    int positionRelais; // Position dans le relais, 1 à 4 pour les positions du relais 4*400 m
 } Performance;
 
 // Structure pour un athlète
@@ -17,6 +17,51 @@ typedef struct {
     Performance performances[100]; // Tableau des performances, taille arbitraire
     int nombrePerformances;
 } Athlete;
+
+// Liste des épreuves valides
+const char *epreuvesValides[] = {"100 m", "400 m", "5000 m", "marathon", "relais 4*400 m"};
+const int nombreEpreuves = 5;
+
+// Fonction pour vérifier si l'épreuve est valide
+bool estEpreuveValide(char *epreuve) {
+    for (int i = 0; i < nombreEpreuves; i++) {
+        if (strcmp(epreuvesValides[i], epreuve) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Fonction pour convertir les abréviations ou variations courantes en noms d'épreuves complets
+void normaliserEpreuve(char *input, char *epreuveNormalisee) {
+    if (strcmp(input, "100") == 0 || strcmp(input, "100m") == 0) {
+        strcpy(epreuveNormalisee, "100 m");
+    } else if (strcmp(input, "400") == 0 || strcmp(input, "400m") == 0) {
+        strcpy(epreuveNormalisee, "400 m");
+    } else if (strcmp(input, "5000") == 0 || strcmp(input, "5000m") == 0) {
+        strcpy(epreuveNormalisee, "5000 m");
+    } else if (strcmp(input, "marathon") == 0) {
+        strcpy(epreuveNormalisee, "marathon");
+    } else if (strcmp(input, "relais") == 0 || strcmp(input, "4*400") == 0 || strcmp(input, "relais 4*400") == 0) {
+        strcpy(epreuveNormalisee, "relais 4*400 m");
+    } else {
+        strcpy(epreuveNormalisee, input);  // Aucune normalisation possible
+    }
+}
+
+// Fonction pour convertir une date de DD/MM/YYYY à YYYY-MM-DD pour uniformité des fichiers
+void convertirDateVersFichier(char *dateSource, char *dateDestination) {
+    int jour, mois, annee;
+    sscanf(dateSource, "%d/%d/%d", &jour, &mois, &annee);
+    sprintf(dateDestination, "%04d-%02d-%02d", annee, mois, jour);
+}
+
+// Fonction pour convertir une date de YYYY-MM-DD à DD/MM/YYYY pour l'affichage
+void convertirDatePourAffichage(char *dateSource, char *dateDestination) {
+    int annee, mois, jour;
+    sscanf(dateSource, "%d-%d-%d", &annee, &mois, &jour);
+    sprintf(dateDestination, "%02d/%02d/%04d", jour, mois, annee);
+}
 
 // Fonction pour sauvegarder les performances d'un athlète dans un fichier
 void sauvegarderPerformances(Athlete *athlete) {
@@ -28,7 +73,9 @@ void sauvegarderPerformances(Athlete *athlete) {
         return;
     }
     for (int i = 0; i < athlete->nombrePerformances; i++) {
-        fprintf(fichier, "%s %s %lf %d\n", athlete->performances[i].date,
+        char datePourFichier[11];
+        convertirDateVersFichier(athlete->performances[i].date, datePourFichier);
+        fprintf(fichier, "%s %s %lf %d\n", datePourFichier,
                 athlete->performances[i].epreuve, athlete->performances[i].temps,
                 athlete->performances[i].positionRelais);
     }
@@ -41,11 +88,13 @@ void chargerPerformances(Athlete *athlete) {
     sprintf(nomFichier, "%s.txt", athlete->nom);
     FILE *fichier = fopen(nomFichier, "r");
     if (fichier == NULL) {
-        // Si le fichier n'existe pas, on assume que c'est le premier usage et on continue sans erreur
         return;
     }
     Performance p;
     while (fscanf(fichier, "%s %s %lf %d", p.date, p.epreuve, &p.temps, &p.positionRelais) == 4) {
+        char datePourAffichage[11];
+        convertirDatePourAffichage(p.date, datePourAffichage);
+        strcpy(p.date, datePourAffichage);
         athlete->performances[athlete->nombrePerformances++] = p;
     }
     fclose(fichier);
@@ -72,22 +121,67 @@ void statistiquesAthlete(Athlete *athlete, const char *epreuve) {
     printf("Meilleur temps: %lf, Pire temps: %lf, Moyenne: %lf\n", min, max, total / count);
 }
 
-// Fonction pour ajouter une nouvelle performance
+// Fonction pour ajouter une nouvelle performance, avec logique spéciale pour le relais
 void ajouterPerformance(Athlete *athlete) {
     if (athlete->nombrePerformances >= 100) {
         printf("Nombre maximum de performances atteint pour %s.\n", athlete->nom);
         return;
     }
     Performance p;
-    printf("Entrer la date de l'entrainement (YYYY-MM-DD): ");
-    scanf("%s", p.date);
-    printf("Entrer le type d'épreuve: ");
-    scanf("%s", p.epreuve);
-    printf("Entrer le temps réalisé: ");
-    scanf("%lf", &p.temps);
-    p.positionRelais = 0;  // Mettre à jour si nécessaire pour les épreuves de relais
-    athlete->performances[athlete->nombrePerformances++] = p;
-    sauvegarderPerformances(athlete);
+    printf("Entrer la date de l'entrainement (DD/MM/YYYY): ");
+    fgets(p.date, 11, stdin);
+    p.date[strcspn(p.date, "\n")] = 0;  // Supprime le newline
+
+    // Afficher les épreuves disponibles et vérifier l'entrée
+    printf("Entrer le type d'épreuve parmi les suivantes :\n");
+    for (int i = 0; i < nombreEpreuves; i++) {
+        printf("- %s\n", epreuvesValides[i]);
+    }
+    char inputEpreuve[20];
+    fgets(inputEpreuve, 20, stdin);
+    inputEpreuve[strcspn(inputEpreuve, "\n")] = 0;  // Supprime le newline
+    normaliserEpreuve(inputEpreuve, p.epreuve);
+
+    while (!estEpreuveValide(p.epreuve)) {
+        printf("Epreuve invalide. Veuillez choisir parmi les suivantes :\n");
+        for (int i = 0; i < nombreEpreuves; i++) {
+            printf("- %s\n", epreuvesValides[i]);
+        }
+        fgets(inputEpreuve, 20, stdin);
+        inputEpreuve[strcspn(inputEpreuve, "\n")] = 0;
+        normaliserEpreuve(inputEpreuve, p.epreuve);
+    }
+
+    // Logique spéciale pour le relais 4*400 m
+    if (strcmp(p.epreuve, "relais 4*400 m") == 0) {
+        Athlete autresAthletes[3];
+        printf("Vous avez choisi une épreuve de relais. Veuillez entrer les informations pour les 4 athlètes du relais.\n");
+        for (int i = 0; i < 4; i++) {
+            printf("Athlète %d: Entrez le nom: ", i + 1);
+            fgets(autresAthletes[i].nom, 50, stdin);
+            autresAthletes[i].nom[strcspn(autresAthletes[i].nom, "\n")] = 0;
+            autresAthletes[i].nombrePerformances = 0; // Initialise pour ce contexte
+            Performance performanceRelais = p; // Copie les informations communes
+            performanceRelais.positionRelais = i + 1;
+            printf("Athlète %d: Entrez le temps réalisé: ", i + 1);
+            char buffer[50];
+            fgets(buffer, 50, stdin);
+            sscanf(buffer, "%lf", &performanceRelais.temps); // Convertit le texte en double
+            autresAthletes[i].performances[autresAthletes[i].nombrePerformances++] = performanceRelais;
+            sauvegarderPerformances(&autresAthletes[i]);
+        }
+    } else {
+        printf("Entrer le temps réalisé: ");
+        char buffer[50];
+        fgets(buffer, 50, stdin);
+        if (sscanf(buffer, "%lf", &p.temps) == 1) {
+            p.positionRelais = 0;  // Non applicable ici
+            athlete->performances[athlete->nombrePerformances++] = p;
+            sauvegarderPerformances(athlete);
+        } else {
+            printf("Entrée invalide pour le temps. Veuillez réessayer.\n");
+        }
+    }
 }
 
 // Fonction pour afficher l'historique des performances
@@ -111,12 +205,13 @@ void menu() {
     bool continuer = true;
 
     while (continuer) {
-        printf("1. Entrer une nouvelle performance\n");
+        printf("\n1. Entrer une nouvelle performance\n");
         printf("2. Afficher l'historique des performances\n");
         printf("3. Afficher les statistiques d'un athlète pour une épreuve\n");
         printf("4. Quitter\n");
         printf("Choisir une option: ");
         scanf("%d", &choix);
+        getchar();  // Nettoie le buffer d'entrée pour éviter de sauter les entrées futures
 
         switch (choix) {
             case 1:
@@ -129,7 +224,16 @@ void menu() {
                 {
                     char epreuve[20];
                     printf("Entrer le nom de l'épreuve pour les statistiques: ");
-                    scanf("%s", epreuve);
+                    fgets(epreuve, 20, stdin);
+                    epreuve[strcspn(epreuve, "\n")] = 0;  // Supprime le newline
+                    while (!estEpreuveValide(epreuve)) {
+                        printf("Epreuve invalide. Veuillez choisir parmi les suivantes :\n");
+                        for (int i = 0; i < nombreEpreuves; i++) {
+                            printf("- %s\n", epreuvesValides[i]);
+                        }
+                        fgets(epreuve, 20, stdin);
+                        epreuve[strcspn(epreuve, "\n")] = 0;
+                    }
                     statistiquesAthlete(&athlete, epreuve);
                 }
                 break;
