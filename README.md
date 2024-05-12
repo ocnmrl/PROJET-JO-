@@ -5,7 +5,7 @@
 
 // Structure pour stocker une performance d'un athlète
 typedef struct {
-    char date[11];  // Format DD/MM/YYYY
+    char date[11];  // Format JJ/MM/AAAA
     char epreuve[20];
     double temps;   // Temps réalisé en secondes
     int positionRelais; // Position dans le relais, 1 à 4 pour les positions du relais 4*400 m
