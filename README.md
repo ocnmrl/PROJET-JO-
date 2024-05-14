@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <float.h>
 
-
-
-// Structure pour stocker les performances d'un athlète
 typedef struct {
     char date[11];  // Format AAAA-MM-JJ
     char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
@@ -12,12 +11,20 @@ typedef struct {
     int position_relais;  // Position dans le relais, -1 si non applicable
 } Performance;
 
-// Structure pour un athlète
 typedef struct {
     char nom[50];
     Performance performances[100]; // Tableau des performances, taille arbitraire
     int nombrePerformances;
 } Athlete;
+
+// Définition d'une structure pour stocker et afficher les statistiques d'une épreuve
+typedef struct {
+    char epreuve[20];
+    float meilleurTemps;
+    float pireTemps;
+    float tempsMoyen;
+} StatistiquesEpreuve;  
+
 
 
 void enregistrerAthlete(const char *nom_fichier, Athlete athlete);
@@ -35,7 +42,7 @@ void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance)
 }
 
 void enregistrerPerformance(const char *nom_fichier, PerformanceAthlete performance);
-void enregistrerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
+void chargerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
     FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
@@ -44,7 +51,7 @@ void enregistrerPerformances(const char *nom_fichier, AthletePerformance *perfor
     }
 
 int index = 0; // Initialise un compteur pour suivre le nombre de performances lues
-    while (fgets(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
+    while (fscanf(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
         index++;
         if (index >= 100) break;  // Présumant un maximum de 100 performances
     }
@@ -56,6 +63,7 @@ int index = 0; // Initialise un compteur pour suivre le nombre de performances l
 
 void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances);
 void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
+
 void afficherHistoriqueAthlete(const char *nom_fichier);
 
 void afficherHistoriqueAthlete(const char *nom_fichier) {
@@ -90,6 +98,67 @@ void afficherHistoriqueAthlete(const char *nom_fichier) {
 
 
 void afficherStatistiques(const char *nom_fichier);
+
+
+void afficherStatistiques(const char *nom_fichier) {
+    char nomCompletFichier[64];
+    snprintf(nomCompletFichier, sizeof(nomCompletFichier), "%s.txt", nom_fichier);
+    
+    FILE *fichier = fopen(nomCompletFichier, "r");
+    if (!fichier) {
+        printf("Impossible d'ouvrir le fichier %s pour lecture.\n", nomCompletFichier);
+        return;
+    }
+
+    Performance performances[100]; // Tableau pour stocker temporairement les performances
+    int count = 0;
+    while (count < 100 && fscanf(fichier, "%s %s %f %d",
+                                 performances[count].date, performances[count].epreuve,
+                                 &performances[count].temps, &performances[count].position_relais) == 4) {
+        count++;
+    }
+    fclose(fichier);
+
+    // Tableau pour stocker les statistiques des différentes épreuves
+    StatistiquesEpreuve statistiques[20]; // Supposons qu'il n'y a pas plus de 20 épreuves différentes
+    int nombreEpreuves = 0;
+
+    // Initialiser les statistiques pour chaque épreuve
+    for (int i = 0; i < count; i++) {
+        int found = -1;
+        for (int j = 0; j < nombreEpreuves; j++) {
+            if (strcmp(performances[i].epreuve, statistiques[j].epreuve) == 0) {
+                found = j;
+                break;
+            }
+        }
+        if (found == -1) { // Nouvelle épreuve, initialiser les statistiques
+            found = nombreEpreuves++;
+            strcpy(statistiques[found].epreuve, performances[i].epreuve);
+            statistiques[found].meilleurTemps = FLT_MAX;
+            statistiques[found].pireTemps = FLT_MIN;
+            statistiques[found].tempsMoyen = 0;
+        }
+        // Mettre à jour les statistiques pour cette épreuve
+        if (performances[i].temps < statistiques[found].meilleurTemps) {
+            statistiques[found].meilleurTemps = performances[i].temps;
+        }
+        if (performances[i].temps > statistiques[found].pireTemps) {
+            statistiques[found].pireTemps = performances[i].temps;
+        }
+        statistiques[found].tempsMoyen += performances[i].temps;
+    }
+
+    // Calculer la moyenne et afficher les résultats
+    for (int i = 0; i < nombreEpreuves; i++) {
+        statistiques[i].tempsMoyen /= count; // Moyenne sur le nombre total de performances, pas par épreuve
+        printf("Épreuve : %s\n", statistiques[i].epreuve);
+        printf("  Meilleur temps : %.2f secondes\n", statistiques[i].meilleurTemps);
+        printf("  Pire temps : %.2f secondes\n", statistiques[i].pireTemps);
+        printf("  Temps moyen : %.2f secondes\n", statistiques[i].tempsMoyen);
+    }
+}
+
 void trierPerformancesParDate(PerformanceAthlete *performances, int nbPerformances);
 void trierPerformancesParEpreuve(PerformanceAthlete *performances, int nbPerformances);
 
