@@ -35,7 +35,7 @@ void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance)
 }
 
 void enregistrerPerformance(const char *nom_fichier, PerformanceAthlete performance);
-void chargerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
+void enregistrerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
     FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
@@ -44,7 +44,7 @@ void chargerPerformances(const char *nom_fichier, AthletePerformance *performanc
     }
 
 int index = 0; // Initialise un compteur pour suivre le nombre de performances lues
-    while (fscanf(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
+    while (fgets(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
         index++;
         if (index >= 100) break;  // Présumant un maximum de 100 performances
     }
