@@ -61,19 +61,30 @@ int index = 0; // Initialise un compteur pour suivre le nombre de performances l
 }
 
 
-void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances);
 
-void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances){
-    FILE *fichier = fopen(nom_fichier, "rb");
-
-    if (fichier == NULL) {
-        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", nom_fichier);
+void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances) {
+    // Ouvrir le fichier en mode lecture
+    FILE *fichier = fopen(nom_fichier, "r");
+    if (!fichier) {
+        printf("Impossible d'ouvrir le fichier %s pour lecture.\n", nom_fichier);
+        *nbPerformances = 0;  // Aucune performance chargée
         return;
     }
-    fread(count, sizeof(int), 1, file); // Lecture du nombre de performances
-    fread(performances, sizeof(AthletePerformance), *count, fichier); // Lecture des performances
 
-    fclose(fichier); // Fermeture du fichier
+    // Initialiser le compteur de performances
+    *nbPerformances = 0;
+
+    // Lire le fichier et stocker les performances dans le tableau
+    while (fscanf(fichier, "%s %s %f %d", 
+                  performances[*nbPerformances].date, 
+                  performances[*nbPerformances].epreuve, 
+                  &performances[*nbPerformances].temps, 
+                  &performances[*nbPerformances].position_relais) == 4) {
+        (*nbPerformances)++;
+    }
+
+    // Fermer le fichier après la lecture
+    fclose(fichier);
 }
 
 void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
