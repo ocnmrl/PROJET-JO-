@@ -25,10 +25,6 @@ typedef struct {
     float tempsMoyen;
 } StatistiquesEpreuve;  
 
-
-
-void enregistrerAthlete(const char *nom_fichier, Athlete athlete);
-
 void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance) {
     FILE *fichier = fopen(nom_fichier, "a"); // Ouvre le fichier en mode append pour ajouter les nouvelles données sans écraser les anciennes
     if (fichier == NULL) {
@@ -41,7 +37,6 @@ void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance)
     printf("Performance enregistrée pour %s\n", nom_fichier);
 }
 
-void enregistrerPerformance(const char *nom_fichier, PerformanceAthlete performance);
 void chargerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
     FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
     if (fichier == NULL) {
@@ -87,7 +82,6 @@ void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performanc
     fclose(fichier);
 }
 
-void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
 void updatePerformance(const char *filename, Performance performance) {
     FILE *file = fopen(filename, "ab+"); // Ouverture du fichier en mode lecture/écriture binaire, création s'il n'existe pas
 
@@ -118,9 +112,6 @@ void updatePerformance(const char *filename, Performance performance) {
     fclose(file); // Fermeture du fichier
 }
 
-
-void afficherHistoriqueAthlete(const char *nom_fichier);
-
 void afficherHistoriqueAthlete(const char *nom_fichier) {
     // Construire le nom complet du fichier basé sur le nom de l'athlète
     char nomCompletFichier[64];
@@ -150,9 +141,6 @@ void afficherHistoriqueAthlete(const char *nom_fichier) {
     // Fermer le fichier
     fclose(fichier);
 }
-
-
-void afficherStatistiques(const char *nom_fichier);
 
 
 void afficherStatistiques(const char *nom_fichier) {
@@ -214,9 +202,6 @@ void afficherStatistiques(const char *nom_fichier) {
     }
 }
 
-void trierPerformancesParDate(PerformanceAthlete *performances, int nbPerformances);
-
-
 void quickSortParDate(AthletePerformance *performances, int gauche, int droite) {
     if (gauche < droite) {
         int pivotIndex = partitionParDate(performances, gauche, droite);
@@ -245,10 +230,6 @@ int partitionParDate(AthletePerformance *performances, int gauche, int droite) {
 void trierPerformancesParDate(AthletePerformance *performances, int nbPerformances) {
     quickSortParDate(performances, 0, nbPerformances - 1);
 }
-
-
-
-void trierPerformancesParEpreuve(PerformanceAthlete *performances, int nbPerformances);
 
 void quickSortParEpreuve(AthletePerformance *performances, int gauche, int droite) {
     if (gauche < droite) {
