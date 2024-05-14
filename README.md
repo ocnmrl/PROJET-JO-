@@ -14,7 +14,7 @@ typedef struct {
 typedef struct {
     char nom[50];
     Performance performances[100]; // Tableau des performances, taille arbitraire
-    int nombrePerformances;
+    int nbPerformances;
 } Athlete;
 
 // Définition d'une structure pour stocker et afficher les statistiques d'une épreuve
@@ -32,32 +32,12 @@ void enregistrerAthlete(const char *nom_fichier, Performance performance) {
         return;
     }
     // Écriture de la performance dans le fichier
-    fprintf(fichier, "%s %s %.2f %d\n", performance.date, performance.event_type, performance.time, performance.relay_position);
+    fprintf(fichier, "%s %s %.2f %d\n", performance.date, performance.epreuve, performance.temps, performance.position_relais);
     fclose(fichier);  // Fermeture du fichier
     printf("Performance enregistrée pour %s\n", nom_fichier);
 }
 
-void chargerPerformances(const char *nom_fichier, Performance *performances, int *nbPerformances) {
-    FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
-    if (fichier == NULL) {
-        printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
-        *nbPerformances = 0; // aucune performance n'a été chargée en raison de l'échec de l'ouverture du fichier
-        return; //  termine l'exécution de la fonction prématurément si une erreur survient
-    }
-
-int index = 0; // Initialise un compteur pour suivre le nombre de performances lues
-    while (fscanf(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
-        index++;
-        if (index >= 100) break;  // Présumant un maximum de 100 performances
-    }
-    *nbPerformances = index; // on stocke le nombre total de performances lues dans la variable pointée par nbPerformances
-    fclose(fichier);  // Fermeture du fichier
-    printf("Performances chargées pour %s\n", nom_fichier);
-}
-
-
-
-void chargerPerformances(const char *nom_fichier, Performance *performances, int *nbPerformances) {
+void chargerPerformances(const char *nom_fichier, Performance*performances, int *nbPerformances) {
     // Ouvrir le fichier en mode lecture
     FILE *fichier = fopen(nom_fichier, "r");
     if (!fichier) {
@@ -213,7 +193,7 @@ int partitionParDate(Performance *performances, int gauche, int droite) {
             performances[j] = temp;
         }
     }
-    AthletePerformance temp = performances[i + 1];
+    Performance temp = performances[i + 1];
     performances[i + 1] = performances[droite];
     performances[droite] = temp;
     return (i + 1);
@@ -227,23 +207,15 @@ void quickSortParDate(Performance *performances, int gauche, int droite) {
     }
 }
 
-void trierPerformancesParDate(AthletePerformance *performances, int nbPerformances) {
+void trierPerformancesParDate(Performance *performances, int nbPerformances) {
     quickSortParDate(performances, 0, nbPerformances - 1);
 }
 
-void quickSortParEpreuve(Performance *performances, int gauche, int droite) {
-    if (gauche < droite) {
-        int pivotIndex = partitionParEpreuve(performances, gauche, droite);
-        quickSortParEpreuve(performances, gauche, pivotIndex - 1);
-        quickSortParEpreuve(performances, pivotIndex + 1, droite);
-    }
-}
-
 int partitionParEpreuve(Performance *performances, int gauche, int droite) {
-    char *pivot = performances[droite].event_type;
+    char *pivot = performances[droite].epreuve;
     int i = (gauche - 1);
     for (int j = gauche; j <= droite - 1; j++) {
-        if (strcmp(performances[j].event_type, pivot) < 0) {
+        if (strcmp(performances[j].epreuve, pivot) < 0) {
             i++;
             Performance temp = performances[i];
             performances[i] = performances[j];
@@ -255,6 +227,15 @@ int partitionParEpreuve(Performance *performances, int gauche, int droite) {
     performances[droite] = temp;
     return (i + 1);
 }
+
+void quickSortParEpreuve(Performance *performances, int gauche, int droite) {
+    if (gauche < droite) {
+        int pivotIndex = partitionParEpreuve(performances, gauche, droite);
+        quickSortParEpreuve(performances, gauche, pivotIndex - 1);
+        quickSortParEpreuve(performances, pivotIndex + 1, droite);
+    }
+}
+
 
 void trierPerformancesParEpreuve(Performance *performances, int nbPerformances) {
     quickSortParEpreuve(performances, 0, nbPerformances - 1);
@@ -283,9 +264,6 @@ int main() {
             case 1:
                 printf("Nom de l'athlète : ");
                 scanf("%s", athlete.nom);
-                printf("Nombre de performances : ");
-                scanf("%s", athlete.nombrePerformances);
-                enregistrerAthlete("athletes.dat", athlete);
                 break;
             case 2:
                 printf("Nom de l'athlète : ");
@@ -293,11 +271,14 @@ int main() {
                 printf("Date (AAAA-MM-JJ) : ");
                 scanf("%s", performance.date);
                 printf("Type d'épreuve : ");
-                scanf("%s", performance.type_epreuve);
+                scanf("%s", performance.epreuve);
                 printf("Temps réalisé : ");
                 scanf("%f", &performance.temps);
-                performance.position_relay = -1;  // Modifier si relais
-                enregistrerPerformance(athlete.nom, performance);
+                performance.position_relais = -1;  // Modifier si relais
+                char filename[64];  // Assurez-vous que la longueur est suffisante pour contenir le nom de fichier
+                snprintf(filename, sizeof(filename), "%s_performances.txt", athlete.nom);
+                // Enregistrer la performance
+                enregistrerAthlete(filename, performance);
                 break;
             case 3:
                 printf("Nom de l'athlète pour l'historique : ");
