@@ -202,14 +202,6 @@ void afficherStatistiques(const char *nom_fichier) {
     }
 }
 
-void quickSortParDate(Performance *performances, int gauche, int droite) {
-    if (gauche < droite) {
-        int pivotIndex = partitionParDate(performances, gauche, droite);
-        quickSortParDate(performances, gauche, pivotIndex - 1);
-        quickSortParDate(performances, pivotIndex + 1, droite);
-    }
-}
-
 int partitionParDate(Performance *performances, int gauche, int droite) {
     char *pivot = performances[droite].date;
     int i = (gauche - 1);
@@ -225,6 +217,14 @@ int partitionParDate(Performance *performances, int gauche, int droite) {
     performances[i + 1] = performances[droite];
     performances[droite] = temp;
     return (i + 1);
+}
+
+void quickSortParDate(Performance *performances, int gauche, int droite) {
+    if (gauche < droite) {
+        int pivotIndex = partitionParDate(performances, gauche, droite);
+        quickSortParDate(performances, gauche, pivotIndex - 1);
+        quickSortParDate(performances, pivotIndex + 1, droite);
+    }
 }
 
 void trierPerformancesParDate(AthletePerformance *performances, int nbPerformances) {
