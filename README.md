@@ -11,10 +11,24 @@ typedef struct {
 // Structure pour stocker les performances d'un athlète
 typedef struct {
     char date[11];  // Format AAAA-MM-JJ
-    char type_epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
+    char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
     float temps;  // Temps réalisé
-    int position_relay;  // Position dans le relais, -1 si non applicable
+    int position_relais;  // Position dans le relais, -1 si non applicable
 } PerformanceAthlete;
+
+void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance) {
+    FILE *fichier = fopen(nom_fichier, "a"); // Ouvre le fichier en mode append pour ajouter les nouvelles données sans écraser les anciennes
+    if (fichier == NULL) {
+        printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
+        return;
+    }
+
+    // Écriture de la performance dans le fichier
+    fprintf(fichier, "%s %s %.2f %d\n", performance.date, performance.event_type, performance.time, performance.relay_position);
+    
+    fclose(fichier);  // Fermeture du fichier
+    printf("Performance enregistrée pour %s\n", nom_fichier);
+}
 
 // Prototypes des fonctions à développer
 void enregistrerAthlete(const char *nom_fichier, Athlete athlete);
