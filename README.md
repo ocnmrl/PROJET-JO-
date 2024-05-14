@@ -2,19 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
-    char nom[50];
-    Performance performances[100]; // Tableau des performances, taille arbitraire
-    int nombrePerformances;
-} Athlete;
-
-typedef struct {
-    char date[11];  // Format AAAA-MM-JJ
-    char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
-    float temps;  // Temps réalisé
-    int position_relais;  // Position dans le relais, -1 si non applicable
-} PerformanceAthlete;
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // Structure pour stocker les performances d'un athlète
 typedef struct {
@@ -22,7 +12,17 @@ typedef struct {
     char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
     float temps;  // Temps réalisé
     int position_relais;  // Position dans le relais, -1 si non applicable
-} PerformanceAthlete;
+} Performance;
+
+// Structure pour un athlète
+typedef struct {
+    char nom[50];
+    Performance performances[100]; // Tableau des performances, taille arbitraire
+    int nombrePerformances;
+} Athlete;
+
+
+void enregistrerAthlete(const char *nom_fichier, Athlete athlete);
 
 void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance) {
     FILE *fichier = fopen(nom_fichier, "a"); // Ouvre le fichier en mode append pour ajouter les nouvelles données sans écraser les anciennes
@@ -36,6 +36,7 @@ void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance)
     printf("Performance enregistrée pour %s\n", nom_fichier);
 }
 
+void enregistrerPerformance(const char *nom_fichier, PerformanceAthlete performance);
 void chargerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
     FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
     if (fichier == NULL) {
@@ -54,12 +55,42 @@ int index = 0; // Initialise un compteur pour suivre le nombre de performances l
     printf("Performances chargées pour %s\n", nom_fichier);
 }
 
-// Prototypes des fonctions à développer
-void enregistrerAthlete(const char *nom_fichier, Athlete athlete);
-void enregistrerPerformance(const char *nom_fichier, PerformanceAthlete performance);
+
 void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances);
 void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
 void afficherHistoriqueAthlete(const char *nom_fichier);
+
+void afficherHistoriqueAthlete(const char *nom_fichier) {
+    // Construire le nom complet du fichier basé sur le nom de l'athlète
+    char nomCompletFichier[64];
+    snprintf(nomCompletFichier, sizeof(nomCompletFichier), "%s.txt", nom_fichier);
+
+    // Ouvrir le fichier en mode lecture
+    FILE *fichier = fopen(nomCompletFichier, "r");
+    if (!fichier) {
+        printf("Impossible d'ouvrir le fichier %s pour lecture.\n", nomCompletFichier);
+        return;
+    }
+
+    // Lire et afficher les performances de l'athlète
+    Performance performance;
+    printf("Historique des performances pour %s :\n", nom_fichier);
+    while (fscanf(fichier, "%s %s %f %d", 
+                  performance.date, performance.epreuve, 
+                  &performance.temps, &performance.position_relais) == 4) {
+        printf("Date : %s, Épreuve : %s, Temps : %.2f secondes", 
+               performance.date, performance.epreuve, performance.temps);
+        if (performance.position_relais != -1) {
+            printf(", Position dans le relais : %d", performance.position_relais);
+        }
+        printf("\n");
+    }
+
+    // Fermer le fichier
+    fclose(fichier);
+}
+
+
 void afficherStatistiques(const char *nom_fichier);
 void trierPerformancesParDate(PerformanceAthlete *performances, int nbPerformances);
 void trierPerformancesParEpreuve(PerformanceAthlete *performances, int nbPerformances);
