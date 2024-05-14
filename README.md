@@ -185,7 +185,70 @@ void afficherStatistiques(const char *nom_fichier) {
 }
 
 void trierPerformancesParDate(PerformanceAthlete *performances, int nbPerformances);
+
+
+void quickSortParDate(AthletePerformance *performances, int gauche, int droite) {
+    if (gauche < droite) {
+        int pivotIndex = partitionParDate(performances, gauche, droite);
+        quickSortParDate(performances, gauche, pivotIndex - 1);
+        quickSortParDate(performances, pivotIndex + 1, droite);
+    }
+}
+
+int partitionParDate(AthletePerformance *performances, int gauche, int droite) {
+    char *pivot = performances[droite].date;
+    int i = (gauche - 1);
+    for (int j = gauche; j <= droite - 1; j++) {
+        if (strcmp(performances[j].date, pivot) < 0) {
+            i++;
+            AthletePerformance temp = performances[i];
+            performances[i] = performances[j];
+            performances[j] = temp;
+        }
+    }
+    AthletePerformance temp = performances[i + 1];
+    performances[i + 1] = performances[droite];
+    performances[droite] = temp;
+    return (i + 1);
+}
+
+void trierPerformancesParDate(AthletePerformance *performances, int nbPerformances) {
+    quickSortParDate(performances, 0, nbPerformances - 1);
+}
+
+
+
 void trierPerformancesParEpreuve(PerformanceAthlete *performances, int nbPerformances);
+
+void quickSortParEpreuve(AthletePerformance *performances, int gauche, int droite) {
+    if (gauche < droite) {
+        int pivotIndex = partitionParEpreuve(performances, gauche, droite);
+        quickSortParEpreuve(performances, gauche, pivotIndex - 1);
+        quickSortParEpreuve(performances, pivotIndex + 1, droite);
+    }
+}
+
+int partitionParEpreuve(AthletePerformance *performances, int gauche, int droite) {
+    char *pivot = performances[droite].event_type;
+    int i = (gauche - 1);
+    for (int j = gauche; j <= droite - 1; j++) {
+        if (strcmp(performances[j].event_type, pivot) < 0) {
+            i++;
+            AthletePerformance temp = performances[i];
+            performances[i] = performances[j];
+            performances[j] = temp;
+        }
+    }
+    AthletePerformance temp = performances[i + 1];
+    performances[i + 1] = performances[droite];
+    performances[droite] = temp;
+    return (i + 1);
+}
+
+void trierPerformancesParEpreuve(AthletePerformance *performances, int nbPerformances) {
+    quickSortParEpreuve(performances, 0, nbPerformances - 1);
+}
+
 
 // Programme principal
 int main() {
