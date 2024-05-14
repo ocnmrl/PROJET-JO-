@@ -30,12 +30,28 @@ void enregistrerAthlete(const char *nom_fichier, AthletePerformance performance)
         printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
         return;
     }
-
     // Écriture de la performance dans le fichier
     fprintf(fichier, "%s %s %.2f %d\n", performance.date, performance.event_type, performance.time, performance.relay_position);
-    
     fclose(fichier);  // Fermeture du fichier
     printf("Performance enregistrée pour %s\n", nom_fichier);
+}
+
+void chargerPerformances(const char *nom_fichier, AthletePerformance *performances, int *nbPerformances) {
+    FILE *fichier = fopen(nom_fichier, "r");  // Ouvre le fichier en mode lecture
+    if (fichier == NULL) {
+        printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
+        *nbPerformances = 0; // aucune performance n'a été chargée en raison de l'échec de l'ouverture du fichier
+        return; //  termine l'exécution de la fonction prématurément si une erreur survient
+    }
+
+int index = 0; // Initialise un compteur pour suivre le nombre de performances lues
+    while (fscanf(fichier, "%s %s %f %d", performances[index].date, performances[index].event_type, &performances[index].time, &performances[index].relay_position) == 4) {
+        index++;
+        if (index >= 100) break;  // Présumant un maximum de 100 performances
+    }
+    *nbPerformances = index; // on stocke le nombre total de performances lues dans la variable pointée par nbPerformances
+    fclose(fichier);  // Fermeture du fichier
+    printf("Performances chargées pour %s\n", nom_fichier);
 }
 
 // Prototypes des fonctions à développer
