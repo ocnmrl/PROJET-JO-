@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 // Structure pour stocker les performances d'un athlète
 typedef struct {
