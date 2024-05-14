@@ -62,6 +62,20 @@ int index = 0; // Initialise un compteur pour suivre le nombre de performances l
 
 
 void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances);
+
+void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performances, int *nbPerformances){
+    FILE *fichier = fopen(nom_fichier, "rb");
+
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", nom_fichier);
+        return;
+    }
+    fread(count, sizeof(int), 1, file); // Lecture du nombre de performances
+    fread(performances, sizeof(AthletePerformance), *count, fichier); // Lecture des performances
+
+    fclose(fichier); // Fermeture du fichier
+}
+
 void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
 
 void afficherHistoriqueAthlete(const char *nom_fichier);
