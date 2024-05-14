@@ -23,13 +23,15 @@ const char *epreuvesValides[] = {"100 m", "400 m", "5000 m", "marathon", "relais
 const int nombreEpreuves = 5;
 
 // Fonction pour vérifier si l'épreuve est valide
-bool estEpreuveValide(char *epreuve) {
-    for (int i = 0; i < nombreEpreuves; i++) {
+int estEpreuveValide(char *epreuve) {
+    int i = 0; // Initialisation de l'index à zéro
+    while (i < nombreEpreuves) { // Continue tant que l'index est inférieur au nombre total d'épreuves
         if (strcmp(epreuvesValides[i], epreuve) == 0) {
-            return true;
+            return 1; // Retourne 1 si l'épreuve correspond à une épreuve valide
         }
+        i++; // Incrémente l'index
     }
-    return false;
+    return 0; // Retourne 0 si aucune correspondance n'a été trouvée après avoir parcouru toutes les épreuves
 }
 
 // Fonction pour convertir les abréviations ou variations courantes en noms d'épreuves complets
