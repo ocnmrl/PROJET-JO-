@@ -2,11 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure pour stocker les informations générales d'un athlète
 typedef struct {
-    char nom[50];  // Nom de l'athlète
-    char genre[10];  // Genre de l'athlète, "Homme" ou "Femme"
+    char nom[50];
+    Performance performances[100]; // Tableau des performances, taille arbitraire
+    int nombrePerformances;
 } Athlete;
+
+typedef struct {
+    char date[11];  // Format AAAA-MM-JJ
+    char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
+    float temps;  // Temps réalisé
+    int position_relais;  // Position dans le relais, -1 si non applicable
+} PerformanceAthlete;
+
 
 // Structure pour stocker les performances d'un athlète
 typedef struct {
