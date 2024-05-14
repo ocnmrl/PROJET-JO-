@@ -88,6 +88,36 @@ void chargerPerformances(const char *nom_fichier, PerformanceAthlete *performanc
 }
 
 void mettreAJourPerformance(const char *nom_fichier, PerformanceAthlete performance);
+void updatePerformance(const char *filename, Performance performance) {
+    FILE *file = fopen(filename, "ab+"); // Ouverture du fichier en mode lecture/écriture binaire, création s'il n'existe pas
+
+    if (file == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", filename);
+        return;
+    }
+
+    // Recherche de la performance dans le fichier
+    int found = 0;
+    rewind(file); // Retour au début du fichier
+    while (fread(&performance, sizeof(Performance), 1, file)) {
+        // Comparaison des dates et des types d'épreuve
+        if (strcmp(performance.date, performance.date) == 0 && strcmp(performance.epreuve, performance.epreuve) == 0) {
+            // Performance trouvée, mise à jour
+            fseek(file, -sizeof(Performance), SEEK_CUR); // Retour à la position avant la lecture
+            fwrite(&performance, sizeof(Performance), 1, file); // Écriture de la nouvelle performance
+            found = 1;
+            break;
+        }
+    }
+
+    // Si la performance n'a pas été trouvée, elle est ajoutée à la fin du fichier
+    if (!found) {
+        fwrite(&performance, sizeof(Performance), 1, file);
+    }
+
+    fclose(file); // Fermeture du fichier
+}
+
 
 void afficherHistoriqueAthlete(const char *nom_fichier);
 
