@@ -26,15 +26,34 @@ typedef struct {
 } StatistiquesEpreuve;  
 
 void enregistrerAthlete(const char *nom_fichier, Performance performance) {
-    FILE *fichier = fopen(nom_fichier, "a"); // Ouvre le fichier en mode append pour ajouter les nouvelles données sans écraser les anciennes
+    FILE *fichier = fopen(nom_fichier, "a"); 
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier %s\n", nom_fichier);
         return;
     }
-    // Écriture de la performance dans le fichier
     fprintf(fichier, "%s %s %.2f %d\n", performance.date, performance.epreuve, performance.temps, performance.position_relais);
-    fclose(fichier);  // Fermeture du fichier
+    fclose(fichier);
     printf("Performance enregistrée pour %s\n", nom_fichier);
+}
+
+void saisirPerformancesAthlete(Athlete *athlete) {
+    printf("Nombre de performances à entrer : ");
+    scanf("%d", &athlete->nbPerformances);
+
+    for (int i = 0; i < athlete->nbPerformances; i++) {
+        printf("Performance %d:\n", i+1);
+        printf("Date (AAAA-MM-JJ) : ");
+        scanf("%s", athlete->performances[i].date);
+        printf("Type d'épreuve : ");
+        scanf("%s", athlete->performances[i].epreuve);
+        printf("Temps réalisé : ");
+        scanf("%f", &athlete->performances[i].temps);
+        athlete->performances[i].position_relais = -1;  // Modifier si relais
+
+        char filename[64];
+        snprintf(filename, sizeof(filename), "%s_performances.txt", athlete->nom);
+        enregistrerAthlete(filename, athlete->performances[i]);
+    }
 }
 
 void chargerPerformances(const char *nom_fichier, Performance*performances, int *nbPerformances) {
@@ -264,6 +283,7 @@ int main() {
             case 1:
                 printf("Nom de l'athlète : ");
                 scanf("%s", athlete.nom);
+                saisirPerformancesAthlete(&athlete);
                 break;
             case 2:
                 printf("Nom de l'athlète : ");
