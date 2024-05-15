@@ -6,7 +6,7 @@
 
 typedef struct {
     char date[11];  // Format AAAA-MM-JJ
-    char epreuve[20];  // Type d'épreuve (100m, 400m, etc.)
+    int epreuve;  // Type d'épreuve (100m, 400m, etc.)
     float temps;  // Temps réalisé
     int position_relais;  // Position dans le relais, -1 si non applicable
 } Performance;
