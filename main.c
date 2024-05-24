@@ -149,7 +149,8 @@ void ListeAthlete(FILE *file){
     }
 }
 
-void afficherAthlete(Performance performance){
+void afficherAthlete(){
+    Performance performance;
     int choix;
 
     FILE *file = fopen("/workspaces/PROJET-JO-/Athlete.txt", "r");
@@ -541,7 +542,6 @@ void statistiqueAthlete(){
 
 
 int main() {
-    Performance performance;
     int choix;
 
     while (1) {
@@ -562,7 +562,7 @@ int main() {
                 ajouterEntrainement();
                 break;
             case 3:
-                afficherAthlete(performance);
+                afficherAthlete();
                 break;
             case 4:
                 statistiqueAthlete();
