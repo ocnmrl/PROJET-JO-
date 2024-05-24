@@ -45,18 +45,19 @@ void typeEpreuves(){
 }
 
 FILE *modifierAthlete(int choix){
-    int choixAthlete;
+    int numAthlete;
     char nomFicher[100];
     char nomAthlete[100];
 
     FILE *Athlete = fopen("/workspaces/PROJET-JO-/Athlete.txt", "r");
 
-    while(fgets(nomAthlete, sizeof(Athlete), Athlete)){
-        sscanf(nomAthlete, "%d", &choixAthlete);
+    // Lire chaque ligne du fichier
+    while (fgets(nomAthlete, sizeof(nomAthlete), Athlete)) {
+        sscanf(nomAthlete, "%d", &numAthlete);
         nomAthlete[strcspn(nomAthlete, "\n")] = 0;
 
-        if(choixAthlete == choix){
-            printf("%s : \n", nomAthlete + 2);
+        if(numAthlete == choix) {
+            //printf("%s :\n", nomAthlete + 2);
             break;
         }
     }
@@ -72,18 +73,19 @@ FILE *modifierAthlete(int choix){
 }
 
 FILE *ouvrirAthlete(int choix){
-    int choixAthlete;
+    int numAthlete;
     char nomFicher[100];
     char nomAthlete[100];
 
     FILE *Athlete = fopen("/workspaces/PROJET-JO-/Athlete.txt", "r");
 
-    while(fgets(nomAthlete, sizeof(Athlete), Athlete)){
-        sscanf(nomAthlete, "%d", &choixAthlete);
+    // Lire chaque ligne du fichier
+    while (fgets(nomAthlete, sizeof(nomAthlete), Athlete)) {
+        sscanf(nomAthlete, "%d", &numAthlete);
         nomAthlete[strcspn(nomAthlete, "\n")] = 0;
 
-        if(choixAthlete == choix){
-            //printf("%s : \n", nomAthlete + 2);
+        if(numAthlete == choix) {
+            //printf("%s :\n", nomAthlete + 2);
             break;
         }
     }
@@ -234,23 +236,20 @@ void ajouterEntrainement(){
         return;
     }
 
-
     ListeAthlete(nomAthletes);
     printf("Choix : ");
     scanf("%d", &choixAthlete);
 
-    printf("\n");
-    FILE *Athlete = ouvrirAthlete(choixAthlete);
-    if(Athlete == NULL){
-        printf("Erreur ouverture fichier\n");
-    }
-
     fclose(nomAthletes);
-    fclose(Athlete);
 
     ListeEpreuve(nomEpreuve);
     printf("Choix : ");
     scanf("%d", &choixEpreuve);
+    while(choixEpreuve < 1 || choixEpreuve > 5){
+        printf("Choix invalide, veuillez réessayer.\n");
+        printf("Choix : ");
+        scanf("%d", &choixEpreuve);
+    }
     if(choixEpreuve == 5){
         printf("Position du relais : ");
         scanf("%d", &relais);
