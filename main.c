@@ -540,7 +540,6 @@ void statistiqueAthlete(){
     }
 }
 
-
 int main() {
     Performance performance;
     int choix;
