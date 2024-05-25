@@ -162,7 +162,12 @@ void afficherAthlete(){
     ListeAthlete(file);
     
     printf("Choix : ");
-    scanf("%d", &choix);
+    if (scanf("%d", &choix) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(file);
+        return;
+    }
 
     printf("\n");
     FILE *Athlete = ouvrirAthlete(choix);
@@ -239,21 +244,43 @@ void ajouterEntrainement(){
 
     ListeAthlete(nomAthletes);
     printf("Choix : ");
-    scanf("%d", &choixAthlete);
+    if (scanf("%d", &choixAthlete) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomAthletes);
+        fclose(nomEpreuve);
+        return;
+    }
 
     fclose(nomAthletes);
 
     ListeEpreuve(nomEpreuve);
+    printf ("Veuillez taper le nombre associé au prénom\n");
     printf("Choix : ");
-    scanf("%d", &choixEpreuve);
+    if (scanf("%d", &choixEpreuve) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomEpreuve);
+        return;
+    }
     while(choixEpreuve < 1 || choixEpreuve > 5){
         printf("Choix invalide, veuillez réessayer.\n");
         printf("Choix : ");
-        scanf("%d", &choixEpreuve);
+        if (scanf("%d", &choixEpreuve) != 1) {
+            while (getchar() != '\n');  
+            printf("Entrée invalide. Veuillez entrer un nombre.\n");
+            fclose(nomEpreuve);
+            return;
+        }
     }
     if(choixEpreuve == 5){
         printf("Position du relais : ");
-        scanf("%d", &relais);
+        if (scanf("%d", &relais) != 1) {
+            while (getchar() != '\n');  
+            printf("Entrée invalide. Veuillez entrer un nombre.\n");
+            fclose(nomEpreuve);
+            return;
+        }
     }else{
         relais = 0;
     }
@@ -268,14 +295,34 @@ void ajouterEntrainement(){
     }
 
     printf("Date de l'entrainement (jj mm aaaa) : ");
-    scanf("%d %d %d", &date.jour, &date.mois, &date.annee);
+    if (scanf("%d %d %d", &date.jour, &date.mois, &date.annee) != 3) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer des nombres.\n");
+        fclose(nomEpreuve);
+        return;
+    }
 
     printf("Quel est le temps de l'athlète en minute : ");
-    scanf("%d", &minute);
+    if (scanf("%d", &minute) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomEpreuve);
+        return;
+    }
     printf("Quel est le temps de l'athlète en seconde : ");
-    scanf("%d", &seconde);
+    if (scanf("%d", &seconde) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomEpreuve);
+        return;
+    }
     printf("Quel est le temps de l'athlète en milliseconde : ");
-    scanf("%d", &ms);
+    if (scanf("%d", &ms) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomEpreuve);
+        return;
+    }
 
     FILE *modifAthlete = modifierAthlete(choixAthlete);
     if(modifAthlete == NULL){
@@ -295,7 +342,7 @@ void ajouterEntrainement(){
 
 
 void afficherPireTemps(FILE *file, char typeEpreuve[100]) {
-    int pireTemps = 0;  // Initialize to 0 to find the worst (highest) time
+    int pireTemps = 0;  
     Performance performance;
 
     rewind(file);
@@ -382,7 +429,12 @@ void perfoAthlete() {
     ListeAthlete(athlete);
     
     printf("Choix : ");
-    scanf("%d", &choixAthlete);
+    if (scanf("%d", &choixAthlete) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(athlete);
+        return;
+    }
 
     FILE *epreuve = fopen("/workspaces/PROJET-JO-/Epreuves.txt", "r");
     if (epreuve == NULL) {
@@ -394,7 +446,13 @@ void perfoAthlete() {
     ListeEpreuve(epreuve);
 
     printf("Choix : ");
-    scanf("%d", &choixEpreuve);
+    if (scanf("%d", &choixEpreuve) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(athlete);
+        fclose(epreuve);
+        return;
+    }
     
     fclose(athlete);
 
@@ -438,7 +496,6 @@ int comparer(const void *a, const void *b) {
 
 void quiJO(void) {
     int lignes, choixEpreuve;
-    // Code pour déterminer qui envoyer aux Jeux Olympiques
     FILE *nomEpreuve = fopen("/workspaces/PROJET-JO-/Epreuves.txt", "r");
     if (nomEpreuve == NULL) {
         printf("Impossible d'ouvrir le fichier nomEpreuve.txt.\n");
@@ -447,7 +504,12 @@ void quiJO(void) {
 
     ListeEpreuve(nomEpreuve);
     printf("Choix : ");
-    scanf("%d", &choixEpreuve);
+    if (scanf("%d", &choixEpreuve) != 1) {
+        while (getchar() != '\n'); 
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        fclose(nomEpreuve);
+        return;
+    }
     printf("\n");
 
     rewind(nomEpreuve);
@@ -525,8 +587,8 @@ void progressionAthlete() {
     ListeAthlete(athlete);
     
     printf("Choix de l'athlète : ");
-    if (scanf("%d", &choixAthlete) != 1) { // Validation de l'entrée
-        while (getchar() != '\n'); // Nettoyer le buffer d'entrée
+    if (scanf("%d", &choixAthlete) != 1) { 
+        while (getchar() != '\n'); 
         printf("Choix invalide, veuillez réessayer.\n");
         fclose(athlete);
         return;
@@ -542,8 +604,8 @@ void progressionAthlete() {
     ListeEpreuve(epreuve);
 
     printf("Choix de l'épreuve : ");
-    if (scanf("%d", &choixEpreuve) != 1) { // Validation de l'entrée
-        while (getchar() != '\n'); // Nettoyer le buffer d'entrée
+    if (scanf("%d", &choixEpreuve) != 1) { 
+        while (getchar() != '\n'); 
         printf("Choix invalide, veuillez réessayer.\n");
         fclose(athlete);
         fclose(epreuve);
@@ -570,16 +632,28 @@ void progressionAthlete() {
     }
 
     printf("Date de début (jj mm aaaa) : ");
-    scanf("%d %d %d", &date1.jour, &date1.mois, &date1.annee);
+    if (scanf("%d %d %d", &date1.jour, &date1.mois, &date1.annee) != 3) {
+        while (getchar() != '\n'); 
+        printf("Entrée invalide, veuillez entrer des nombres.\n");
+        fclose(file);
+        fclose(athlete);
+        return;
+    }
 
     printf("Date de fin (jj mm aaaa) : ");
-    scanf("%d %d %d", &date2.jour, &date2.mois, &date2.annee);
+    if (scanf("%d %d %d", &date2.jour, &date2.mois, &date2.annee) != 3) {
+        while (getchar() != '\n'); 
+        printf("Entrée invalide, veuillez entrer des nombres.\n");
+        fclose(file);
+        fclose(athlete);
+        return;
+    }
 
     int tempsDebut = -1, tempsFin = -1;
     Performance performance;
 
     rewind(file);
-    while(fgetc(file) != '\n');  // Sauter la première ligne
+    while(fgetc(file) != '\n');  
 
     while(fscanf(file, "%d %d %d %s %d %d %d %d", &performance.date.jour, &performance.date.mois, &performance.date.annee, performance.epreuve, &performance.temps.minute, &performance.temps.seconde, &performance.temps.ms, &performance.position_relais) != EOF) {
         if (strcmp(performance.epreuve, Epreuve + 2) == 0) {
@@ -612,10 +686,13 @@ void statistiqueAthlete(){
     int choix;
     printf("1. Résumé des performances d’un athlète\n");
     printf("2. Qui envoyer au JO\n");
-    printf("3. Progression de l’athlète\n");
     printf("3. Quitter\n");
     printf("Votre choix : ");
-    scanf("%d", &choix);
+    if (scanf("%d", &choix) != 1) {
+        while (getchar() != '\n');  
+        printf("Entrée invalide. Veuillez entrer un nombre.\n");
+        return;
+    }
 
     switch (choix) {
         case 1:
@@ -624,9 +701,6 @@ void statistiqueAthlete(){
         case 2:
             quiJO();
             break;
-        // case 3:
-        //     //progressionAthlete();
-        //     break;
         case 3:
             exit(0);
         default:
@@ -647,9 +721,13 @@ int main() {
         printf("4. Afficher les statistiques d'un athlète\n");
         printf("5. Demander la progression entre deux athletes\n");
         printf("6. Quitter\n");
-        printf("Tapez un nombre entre 1 et 6 inclus");
+        printf ("Taper un nombre entre 1 et 6\n");
         printf("Votre choix : ");
-        scanf("%d", &choix);
+         if (scanf("%d", &choix) != 1) {
+            while (getchar() != '\n'); 
+            printf("Entrée invalide. Veuillez entrer un nombre.\n");
+            continue;
+        }
 
         switch (choix) {
             case 1:
