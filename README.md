@@ -27,3 +27,4 @@ La fonction 'afficherMoyenneTemps' calcule et retourne le temps moyen pour une �
 La fonction 'afficherMeilleurTemps' affiche le meilleur temps (le plus court) pour une épreuve spécifique.
 La fonction 'perfoAthlete' affiche les meilleures, pires et moyennes performances d'un athlète pour une épreuve choisie.
 La fonction 'quiJO' détermine quels athlètes envoyer aux Jeux Olympiques en fonction de leurs meilleures moyennes pour une épreuve spécifique. Elle affiche les trois meilleures moyennes pour une épreuve choisie.
+La fonction 'statistiqueAthlete' gère le menu des statistiques. Elle permet à l'utilisateur de choisir entre afficher un résumé des performances d'un athlète ou déterminer quels athlètes envoyer aux JO.
