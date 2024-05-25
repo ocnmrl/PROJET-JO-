@@ -143,7 +143,7 @@ void ListeAthlete(FILE *file){
     rewind(file);
     printf("\n");
 
-    for(int i=0; i<lignes; i++){
+    for(int i=0; i<lignes+1; i++){
         printf("%d. ", i+1);
         afficherNomAthlete(file);
     }
