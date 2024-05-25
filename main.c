@@ -647,6 +647,7 @@ int main() {
         printf("4. Afficher les statistiques d'un athlète\n");
         printf("5. Demander la progression entre deux athletes\n");
         printf("6. Quitter\n");
+        printf("Tapez un nombre entre 1 et 6 inclus");
         printf("Votre choix : ");
         scanf("%d", &choix);
 
