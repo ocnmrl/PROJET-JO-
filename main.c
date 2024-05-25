@@ -289,7 +289,7 @@ void ajouterEntrainement(){
     }
 
     ListeAthlete(nomAthletes);
-    printf("Choix : ");
+    printf("Choix (écrire le nombre correspondant) : ");
     if (scanf("%d", &choixAthlete) != 1) {
         while (getchar() != '\n');  
         printf("Entrée invalide. Veuillez entrer un nombre.\n");
@@ -311,6 +311,7 @@ void ajouterEntrainement(){
     }
     while(choixEpreuve < 1 || choixEpreuve > 5){
         printf("Choix invalide, veuillez réessayer.\n");
+        printf ("Veuillez taper le nombre associé à l'épreuve\n");
         printf("Choix : ");
         if (scanf("%d", &choixEpreuve) != 1) {
             while (getchar() != '\n');  
