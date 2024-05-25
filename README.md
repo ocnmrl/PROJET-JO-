@@ -13,6 +13,7 @@ Explication du code :
 Nous avons commencé par déclarer les fonctions nécessaires au programme. La structure 'Date' représente une date avec le jour, le mois, l'année. La structure 'Temps' représente un temps avec des minutes, des secondes et des millisecondes. La structure 'Performance' contient les informations d'une performance : date, épreuve, temps et position dans un relais (si applicable). La structure 'Athlete' contient les informations d'un athlète : nom, tableau de performances, et le nombre de performances. Et la structure 'StatistiquesEpreuve' stocke les statistiques d'une épreuve : le meilleur temps, le pire temps, et le temps moyen.
 
 La fonction principale affiche le menu principal et appelle les fonctions correspondantes selon le choix de l'utilisateur. Elle permet de : ajouter un nouvel athlète, ajouter une nouvelle performance pour un athlète existant, afficher l'historique des performances d'un athlète, afficher les statistiques d'un athlète, quitter le programme. Chaque case du switch correspond à une fonctionnalité du programme, et les fonctions associées sont appelées en conséquence. 
+
 La fonction 'typeEpreuves' affiche une liste d'épreuves disponibles que les athlètes peuvent réaliser.
 
 La fonction 'ligne' compte et retourne le nombre de lignes dans un fichier. Elle lit le fichier caractère par caractère et incrémente le compteur de lignes chaque fois qu'elle rencontre un caractère de nouvelle ligne ('\n').
