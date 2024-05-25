@@ -612,7 +612,7 @@ void statistiqueAthlete(){
     int choix;
     printf("1. Résumé des performances d’un athlète\n");
     printf("2. Qui envoyer au JO\n");
-    //printf("3. Progression de l’athlète\n");
+    printf("3. Progression de l’athlète\n");
     printf("3. Quitter\n");
     printf("Votre choix : ");
     scanf("%d", &choix);
