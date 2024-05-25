@@ -97,17 +97,18 @@ FILE *ouvrirAthlete(int choix){
     return file;
 }
 
-int ligne(FILE *file){
+int ligne(FILE *file) {
     int c;
     int lignes = 0;
 
-    while((c = fgetc(file)) != EOF){
-        if (c == '\n'){
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n') {
             lignes++;
         }
     }
     return lignes;
 }
+
 
 void afficherNomEpreuve(FILE *file){
     char nomEpreuve[100];
@@ -129,25 +130,26 @@ void ListeEpreuve(FILE *file){
     }
 }
 
-void afficherNomAthlete(FILE *file){
+void afficherNomAthlete(FILE *file) {
     char nomAthlete[100];
 
-    fseek(file, 2, SEEK_CUR);
+    // Lire la ligne entière sans sauter de caractères
     fgets(nomAthlete, sizeof(nomAthlete), file);
     nomAthlete[strcspn(nomAthlete, "\n")] = 0;
     printf("%s\n", nomAthlete);
 }
 
-void ListeAthlete(FILE *file){
+void ListeAthlete(FILE *file) {
     int lignes = ligne(file);
     rewind(file);
     printf("\n");
 
-    for(int i=0; i<lignes+1; i++){
-        printf("%d. ", i+1);
+    for (int i = 0; i < lignes; i++) {
+        printf("%d. ", i + 1);
         afficherNomAthlete(file);
     }
 }
+
 
 void afficherAthlete() {
     Performance performance;
@@ -265,7 +267,7 @@ void creeAthlete(){
 
     nomAthletes = fopen("/workspaces/PROJET-JO-/Athlete.txt", "a");
     if(nomAthletes != NULL){
-        fprintf(nomAthletes, "%d %s\n", dernierNumero+1, prenom);
+        fprintf(nomAthletes, "%s\n", prenom);
         fclose(nomAthletes);
     }
 }
