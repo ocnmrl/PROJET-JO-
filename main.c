@@ -511,7 +511,101 @@ void quiJO(void) {
     fclose(nomAthletes);
     fclose(nomEpreuve);
 }
+void progressionAthlete() {
+    int choixAthlete, choixEpreuve;
+    Date date1, date2;
+    char Epreuve[100];
 
+    FILE *athlete = fopen("/workspaces/PROJET-JO-/Athlete.txt", "r");
+    if (athlete == NULL) {
+        printf("Erreur ouverture fichier Athlete.txt\n");
+        return;
+    }
+
+    ListeAthlete(athlete);
+    
+    printf("Choix de l'athlète : ");
+    if (scanf("%d", &choixAthlete) != 1) { // Validation de l'entrée
+        while (getchar() != '\n'); // Nettoyer le buffer d'entrée
+        printf("Choix invalide, veuillez réessayer.\n");
+        fclose(athlete);
+        return;
+    }
+
+    FILE *epreuve = fopen("/workspaces/PROJET-JO-/Epreuves.txt", "r");
+    if (epreuve == NULL) {
+        printf("Erreur ouverture fichier Epreuves.txt\n");
+        fclose(athlete);
+        return;
+    }
+
+    ListeEpreuve(epreuve);
+
+    printf("Choix de l'épreuve : ");
+    if (scanf("%d", &choixEpreuve) != 1) { // Validation de l'entrée
+        while (getchar() != '\n'); // Nettoyer le buffer d'entrée
+        printf("Choix invalide, veuillez réessayer.\n");
+        fclose(athlete);
+        fclose(epreuve);
+        return;
+    }
+
+    rewind(epreuve);
+    while (fgets(Epreuve, sizeof(Epreuve), epreuve)) {
+        int choix;
+        sscanf(Epreuve, "%d", &choix);
+        Epreuve[strcspn(Epreuve, "\n")] = 0;
+        if (choix == choixEpreuve) {
+            break;
+        }
+    }
+
+    fclose(epreuve);
+
+    FILE *file = ouvrirAthlete(choixAthlete);
+    if (file == NULL) {
+        printf("Erreur ouverture fichier de l'athlète\n");
+        fclose(athlete);
+        return;
+    }
+
+    printf("Date de début (jj mm aaaa) : ");
+    scanf("%d %d %d", &date1.jour, &date1.mois, &date1.annee);
+
+    printf("Date de fin (jj mm aaaa) : ");
+    scanf("%d %d %d", &date2.jour, &date2.mois, &date2.annee);
+
+    int tempsDebut = -1, tempsFin = -1;
+    Performance performance;
+
+    rewind(file);
+    while(fgetc(file) != '\n');  // Sauter la première ligne
+
+    while(fscanf(file, "%d %d %d %s %d %d %d %d", &performance.date.jour, &performance.date.mois, &performance.date.annee, performance.epreuve, &performance.temps.minute, &performance.temps.seconde, &performance.temps.ms, &performance.position_relais) != EOF) {
+        if (strcmp(performance.epreuve, Epreuve + 2) == 0) {
+            int temps = performance.temps.minute * 60000 + performance.temps.seconde * 1000 + performance.temps.ms;
+            if (performance.date.annee == date1.annee && performance.date.mois == date1.mois && performance.date.jour == date1.jour) {
+                tempsDebut = temps;
+            }
+            if (performance.date.annee == date2.annee && performance.date.mois == date2.mois && performance.date.jour == date2.jour) {
+                tempsFin = temps;
+            }
+        }
+    }
+
+    if (tempsDebut == -1 || tempsFin == -1) {
+        printf("Les temps pour les dates spécifiées n'ont pas été trouvés.\n");
+    } else {
+        int difference = tempsFin - tempsDebut;
+        printf("Progression entre %d/%d/%d et %d/%d/%d : %dmin %dsec %dms\n",
+               date1.jour, date1.mois, date1.annee,
+               date2.jour, date2.mois, date2.annee,
+               difference / 60000, (difference % 60000) / 1000, (difference % 60000) % 1000);
+    }
+
+    fclose(file);
+    fclose(athlete);
+}
 
 
 void statistiqueAthlete(){
@@ -541,6 +635,7 @@ void statistiqueAthlete(){
 }
 
 
+
 int main() {
     int choix;
 
@@ -550,7 +645,8 @@ int main() {
         printf("2. Entrer une nouvelle performance pour un athlète existant\n");
         printf("3. Afficher l'historique d'un athlète\n");
         printf("4. Afficher les statistiques d'un athlète\n");
-        printf("5. Quitter\n");
+        printf("5. Demander la progression entre deux athletes\n");
+        printf("6. Quitter\n");
         printf("Votre choix : ");
         scanf("%d", &choix);
 
@@ -568,6 +664,9 @@ int main() {
                 statistiqueAthlete();
                 break;
             case 5:
+                progressionAthlete();
+                break;
+            case 6:
                 exit(0);
             default:
                 printf("Choix invalide, veuillez réessayer.\n");
