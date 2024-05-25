@@ -378,7 +378,7 @@ void ajouterEntrainement(){
 
     int sauterLignes = 0;
     sauterLignes = ligne(modifAthlete);
-    fprintf(modifAthlete, "%d %d %d %s %d %d %d %d\n", date.jour, date.mois, date.annee, epreuve + 2, minute, seconde, ms, relais);
+    fprintf(modifAthlete, "\n %d %d %d %s %d %d %d %d", date.jour, date.mois, date.annee, epreuve + 2, minute, seconde, ms, relais);
     if(sauterLignes < 0){
         return;
     }
