@@ -6,7 +6,7 @@ Nous avons démarré le projet le dimanche 12 mai de 9h à 19h. Au cours de cett
 
 Comme vous l’avez lu nous avons eu beaucoup de réunions car nous avons porté beaucoup d’importance à la communication au sein du groupe et à l’avancée homogène et régulière du projet. De plus, le fait de travailler ensemble nous a permis de mieux comprendre nos difficultés et surtout de mieux les résoudre car chacune disait ce qu’elle pensait ouvertement.
 
-Nous avons choisi de travailler sur le PC de Bouchra pour l’historique des fichiers des athlètes ce qui malgré un début efficace à été un frein pour le travail de groupe par la suite. En effet le fait que toute l’équipe ne puisse pas avoir accès aux fichiers à été quelque peu problématique pour tester les différentes fonctions faisant appel aux fichiers. Pour remédier à ce problème nous avons décidé de nous donner des fonctions respectives à développer une fois que nous avons eu une idée du squelette. Ensuite la fonction afficher les statistiques d’un athlète nous a donné du fil à retordre car il a fallu effectuer plus de calcul que pour les autres fonctions et la décomposer en trois parties. La partie tri nous à mis au pied du mur car il s’agissait du dernier TD de l’année. Nous avons demandé l’aide de camarades pour essayer de s’aider mutuellement sur le fonctionnement des tris qu'eux non plus n’avaient pas compris, et le type de tri à utiliser. 
+Nous avons choisi de travailler principalement sur le PC de Bouchra pour l’historique des fichiers des athlètes ce qui malgré un début efficace à été un frein pour le travail de groupe par la suite. En effet le fait que toute l’équipe ne puisse pas avoir accès aux fichiers à été quelque peu problématique pour tester les différentes fonctions faisant appel aux fichiers. Pour remédier à ce problème nous avons décidé de nous donner des fonctions respectives à développer une fois que nous avons eu une idée du squelette. Ensuite la fonction afficher les statistiques d’un athlète nous a donné du fil à retordre car il a fallu effectuer plus de calcul que pour les autres fonctions et la décomposer en trois parties. La partie tri nous à mis au pied du mur car il s’agissait du dernier TD de l’année. Nous avons demandé l’aide de camarades pour essayer de s’aider mutuellement sur le fonctionnement des tris qu'eux non plus n’avaient pas compris, et le type de tri à utiliser. 
 De plus, nous avons organisé une réunion le vendredi 24 mai de 10h à 19h pour finaliser le projet. Au cours de cette réunion, nous pensions terminer le programme et finir de rédiger le rapport mais nous n'avons pas réussi à coder une fonction permettant d'afficher la progression de l'athlète entre deux dates malgré plusieurs essais infructueux. Pour remédier à cela, le lendemain matin (samedi 25 mai) nous avons fait une dernière réunion pour réessayer de faire fonctionner cette fonction. Cela nous a pris pas mal de temps mais nous étions motivées à réussir le programme en entier. Enfin nous avons travaillé sur la robustesse du programme car lorsque nous métions autre chose que des nombres le programme crashait. A la fin de cette journée notre programme était terminé.
 Explication du code : 
 
@@ -16,19 +16,19 @@ La fonction principale affiche le menu principal et appelle les fonctions corres
 
 La fonction 'typeEpreuves' affiche une liste d'épreuves disponibles que les athlètes peuvent réaliser.
 
-La fonction 'ligne' compte et retourne le nombre de lignes dans un fichier. Elle lit le fichier caractère par caractère et incrémente le compteur de lignes chaque fois qu'elle rencontre un caractère de nouvelle ligne ('\n').
-
 Les fonctions 'modifierAthlete' et 'ouvrirAthlete' ouvrent un fichier correspondant à l'athlète choisi. 'modifierAthlete' ouvre le fichier en mode lecture et écriture (r+), tandis que 'ouvrirAthlete' l'ouvre en mode lecture seule (r). Elles recherchent l'athlète sélectionné dans le fichier 'Athlete.txt', construisent le nom de fichier spécifique de l'athlète, et ouvrent ce fichier.
 
+La fonction 'ligne' compte et retourne le nombre de lignes dans un fichier. Elle lit le fichier caractère par caractère et incrémente le compteur de lignes chaque fois qu'elle rencontre un caractère de nouvelle ligne ('\n').
+
+La fonction 'afficherNomEpreuve' lit et affiche le nom d'une épreuve à partir d'un fichier. 'ListeEpreuve' utilise 'afficherNomEpreuve' pour afficher toutes les épreuves présentes dans 'Epreuves.txt'.
+
 La fonction 'afficherNomAthlete' lit et affiche le nom d'un athlète à partir d'un fichier. Et la fonction 'ListeAthlete' utilise 'afficherNomAthlete' pour afficher tous les athlètes présents dans 'Athlete.txt'.
+
+La fonction 'afficherAthlete' affiche toutes les performances d'un athlète sélectionné. Elle liste d'abord les athlètes disponibles, puis demande à l'utilisateur de choisir un athlète. Ensuite, elle ouvre le fichier de cet athlète et affiche les détails de chaque performance.
 
 La fonction 'creeAthlete' crée un nouveau fichier pour un nouvel athlète et ajoute son nom au fichier 'Athlete.txt'. Elle demande à l'utilisateur de fournir le prénom de l'athlète, crée un fichier pour cet athlète, et met à jour la liste des athlètes avec un numéro d'athlète unique.
 
 La fonction 'ajouterEntrainement' ajoute une nouvelle performance pour un athlète existant. Elle demande à l'utilisateur de choisir un athlète et une épreuve, et d'entrer les détails de la performance. Ensuite, elle ouvre le fichier de l'athlète et ajoute cette nouvelle performance.
-
-La fonction 'afficherAthlete' affiche toutes les performances d'un athlète sélectionné. Elle liste d'abord les athlètes disponibles, puis demande à l'utilisateur de choisir un athlète. Ensuite, elle ouvre le fichier de cet athlète et affiche les détails de chaque performance.
-
-La fonction 'afficherNomEpreuve' lit et affiche le nom d'une épreuve à partir d'un fichier. 'ListeEpreuve' utilise 'afficherNomEpreuve' pour afficher toutes les épreuves présentes dans 'Epreuves.txt'.
 
 La fonction 'afficherPireTemps' affiche le pire temps (le plus long) pour une épreuve spécifique.
 
