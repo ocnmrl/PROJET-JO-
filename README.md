@@ -1,4 +1,4 @@
-# PROJET-JO-
+# PROJET-JO
 
 Notre équipe se compose de trois personnes: Océane, Bouchra et Maëlle. Nous avons choisi d’effectuer le projet Projet-CER-JO, un projet de gestion qui nous a semblé adapté aux capacités de chacune. Ce projet a pour but de créer un programme permettant à un entraîneur de consulter et modifier les athlètes et leurs performances pour le 100m, le 400m, le 5000m, le marathon et le relais 4x400m. Afin de mener à bien ce projet nous avons dû utiliser les notions vues en TD comme les structures, les fichiers et les tris.
 
