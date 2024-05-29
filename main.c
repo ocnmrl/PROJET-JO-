@@ -136,7 +136,7 @@ void afficherNomAthlete(FILE *file) {
     // Lire la ligne entière sans sauter de caractères
     fgets(nomAthlete, sizeof(nomAthlete), file);
     nomAthlete[strcspn(nomAthlete, "\n")] = 0;
-    printf("%s\n", nomAthlete);
+    printf("%s\n", nomAthlete+2);
 }
 
 void ListeAthlete(FILE *file) {
@@ -267,7 +267,7 @@ void creeAthlete(){
 
     nomAthletes = fopen("/workspaces/PROJET-JO-/Athlete.txt", "a");
     if(nomAthletes != NULL){
-        fprintf(nomAthletes, "%s\n", prenom);
+        fprintf(nomAthletes, "%d %s\n", dernierNumero+1, prenom);
         fclose(nomAthletes);
     }
 }
@@ -381,7 +381,7 @@ void ajouterEntrainement(){
 
     int sauterLignes = 0;
     sauterLignes = ligne(modifAthlete);
-    fprintf(modifAthlete, "\n %d %d %d %s %d %d %d %d", date.jour, date.mois, date.annee, epreuve + 2, minute, seconde, ms, relais);
+    fprintf(modifAthlete, "%d %d %d %s %d %d %d %d\n", date.jour, date.mois, date.annee, epreuve + 2, minute, seconde, ms, relais);
     if(sauterLignes < 0){
         return;
     }
